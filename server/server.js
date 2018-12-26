@@ -22,7 +22,7 @@ var express = require("express");
 var url = require("url");
 //endregion
 //region Constants
-var PORT = Number(process.env.PORT || 3000);
+var PORT = Number(process.env.PORT || 80);
 var FILES_PATH = path.join(__dirname, '../files');
 var SPEED_TICK_TIME = 750; //ms
 var TBP_PROXY = process.env["TBP_PROXY"] || "https://thepiratebay.rocks";
@@ -429,7 +429,7 @@ io.on('connection', function (client) {
         //config
         session.config = {
             clientDownload: {
-                value: false,
+                value: true,
                 displayName: "Stream downloads to user",
                 type: "checkbox",
                 title: "Choose whether to stream file to client while catching downloads or not, if unchecked windows will close after download is captured."

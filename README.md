@@ -36,16 +36,16 @@ Ensure that you request full google drive access permission and basic G+ info in
 
 To start server, run:
 ```js
-npm start
+    npm start
 ```
 <h2>For Heroku:</h2>
 <i>Heroku is no longer supported.</i>
 
 <h2> For Docker: </h2>
-`docker run -d -p 3000:3000 -e GOOGLE_CLIENT_ID='***' 
--e GOOGLE_CLIENT_SECRET='***' 
--e GOOGLE_REDIRECT_URL='***'
-mrigank11/embetacloud node server/server.js`
+    `docker run -d -p 3000:3000 -e GOOGLE_CLIENT_ID='***' 
+    -e GOOGLE_CLIENT_SECRET='***' 
+    -e GOOGLE_REDIRECT_URL='***'
+    mrigank11/embetacloud node server/server.js`
 
 Fill `***` with appropriate values.
 
@@ -71,31 +71,31 @@ Adding new clouds is easy, just follow these steps:
 2. Now you've to write your code in that file, the template is 
 
 ```ts
-export class CloudName extends EventEmitter{
-    constructor(credentials){
-        super();
-        //store credentials, they can be username/password or OAuth Tokens etc.
+    export class CloudName extends EventEmitter{
+        constructor(credentials){
+            super();
+            //store credentials, they can be username/password or OAuth Tokens etc.
+        }
+        static getURL(){
+            //return the url on which the user will be redirected for credentials, can be OAuth Consent Page or a page on server itself.
+        }
+        static callbackHandler(query,callback){
+            //handle the recieved credentials, 'query' contains the GET params. (like for OAuth, authentication code is 'query.code')
+            //after successfull authenticaltion, return creds to 'callback' to be stored as session variable
+            //if authentication fails, call the callback as: callback(0)
+            // when user requests a file upload, credentials from session will be used to initialize this class (the constructor will be called)
+        }
+        public uploadFile(readStream, totalSize, mime, filename){
+            //handle the upload procedure
+            //it should emit => progress        : {name,bytesUploaded,size}
+            //                  fileUploaded    : {size, name , error} 
+        }
+        public uploadDir(localFolderPath){          //not necessary
+            //upload a local directory
+            //should emit    => addSize    : size      size in bytes to be added to total upload size
+            //may emit       => mkdir      : name      name of cloud directory created
+        }
     }
-    static getURL(){
-        //return the url on which the user will be redirected for credentials, can be OAuth Consent Page or a page on server itself.
-    }
-    static callbackHandler(query,callback){
-        //handle the recieved credentials, 'query' contains the GET params. (like for OAuth, authentication code is 'query.code')
-        //after successfull authenticaltion, return creds to 'callback' to be stored as session variable
-        //if authentication fails, call the callback as: callback(0)
-        // when user requests a file upload, credentials from session will be used to initialize this class (the constructor will be called)
-    }
-    public uploadFile(readStream, totalSize, mime, filename){
-        //handle the upload procedure
-        //it should emit => progress        : {name,bytesUploaded,size}
-        //                  fileUploaded    : {size, name , error} 
-    }
-    public uploadDir(localFolderPath){          //not necessary
-        //upload a local directory
-        //should emit    => addSize    : size      size in bytes to be added to total upload size
-        //may emit       => mkdir      : name      name of cloud directory created
-    }
-}
 ``` 
 
 For example, see `/server/Storages/GDrive/GDrive.ts`
